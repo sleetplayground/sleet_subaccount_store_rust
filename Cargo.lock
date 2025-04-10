@@ -3387,7 +3387,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "sleet_rust_hello"
+name = "sleet_subaccount_store_rust"
 version = "0.1.0"
 dependencies = [
  "near-sdk",

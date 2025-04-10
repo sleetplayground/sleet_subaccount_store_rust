@@ -29,10 +29,10 @@ https://hub.docker.com/r/sourcescan/cargo-near/tags
 
 ```bash
 # Deploy to testnet
-near deploy <your-account>.testnet build_near/sleet_rust_hello.wasm
+near deploy <your-account>.testnet build_near/sleet_subaccount_store_rust.wasm
 
 # For mainnet deployment
-near deploy <your-account>.near build_near/sleet_rust_hello.wasm
+near deploy <your-account>.near build_near/sleet_subaccount_store_rust.wasm
 ```
 
 ---
