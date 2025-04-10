@@ -1,0 +1,8 @@
+# Mac
+.DS_Store
+
+
+# Cargo
+/target
+/build_cargo
+/build_near
