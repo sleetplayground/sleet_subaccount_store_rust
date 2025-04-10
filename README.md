@@ -1,7 +1,6 @@
-# sleet_rust_hello
+# sleet_subaccount_store_rust
 
-🦀 a near hello smart contract written in rust
-
+📝 turns any near account into a subaccount store
 
 ---
 
