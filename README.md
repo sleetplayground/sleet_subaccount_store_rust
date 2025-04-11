@@ -45,11 +45,12 @@ near deploy <your-account>.near build_near/sleet_subaccount_store_rust.wasm
 
 - set_price, for setting the required near deposit for sub account
 - get_price, for getting the required price
-- get_deposit_balance, for getting their deposit balance
 - get_sub_count, for getting count of subaccounts
 - get_sub_addresses, for getting a list of subaccounts (takes start_index and limit as parameters)
-- create_sub_account, for creating a subaccount, anyone can call this if they have deposied the min required
-- contract should keep track of users deposit balances
+- user_get_deposit_balance, for getting their deposit balance
+- user_create_sub_account, for creating a subaccount, anyone can call this if they have deposied the min required
+- user_withdraw_balance, so a user can withdraw their deposit balance
+- contract should keep track of users deposit balances whenever anyone trasfers near to the contract
 
 
 
