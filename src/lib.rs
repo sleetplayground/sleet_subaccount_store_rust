@@ -136,6 +136,27 @@ impl Contract {
         self.deposits.remove(&account_id);
         Promise::new(account_id).transfer(balance)
     }
+
+    // Admin account management methods
+    pub fn admin_add_account(&mut self, subaccount_id: String) {
+        assert_eq!(
+            self.owner_id,
+            near_sdk::env::predecessor_account_id(),
+            "Only the owner can add accounts"
+        );
+        assert!(!self.subaccounts.contains(&subaccount_id), "Subaccount already exists");
+        self.subaccounts.insert(&subaccount_id);
+    }
+
+    pub fn admin_remove_account(&mut self, subaccount_id: String) {
+        assert_eq!(
+            self.owner_id,
+            near_sdk::env::predecessor_account_id(),
+            "Only the owner can remove accounts"
+        );
+        assert!(self.subaccounts.contains(&subaccount_id), "Subaccount does not exist");
+        self.subaccounts.remove(&subaccount_id);
+    }
 }
 
 
