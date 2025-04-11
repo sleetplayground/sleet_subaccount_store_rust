@@ -10,11 +10,10 @@
 
 /// 👋
 // Find all our documentation at https://docs.near.org
-use near_sdk::{log, near, AccountId, Balance, Promise};
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, UnorderedSet};
 use near_sdk::json_types::U128;
-use std::collections::HashMap;
+use near_sdk::{env, log, near_bindgen, AccountId, Promise, NearToken};
 
 
 
@@ -23,8 +22,7 @@ use std::collections::HashMap;
 
 /// 👋
 // Define the contract structure
-#[near(contract_state)]
-#[derive(BorshDeserialize, BorshSerialize)]
+#[near_bindgen]
 pub struct Contract {
     greeting: String,
     price: Balance,
@@ -34,6 +32,7 @@ pub struct Contract {
 }
 
 // Define the default, which automatically initializes the contract
+#[near_bindgen]
 impl Contract {
     #[init]
     pub fn new(owner_id: AccountId, initial_price: U128) -> Self {
@@ -53,7 +52,7 @@ impl Contract {
 
 /// 👋
 // Implement the contract structure
-#[near]
+#[near_bindgen]
 impl Contract {
     // Greeting methods
     pub fn get_greeting(&self) -> String {
