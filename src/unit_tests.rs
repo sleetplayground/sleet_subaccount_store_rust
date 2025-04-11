@@ -65,16 +65,18 @@ mod tests {
         let owner: AccountId = "owner.near".parse().unwrap();
         let user: AccountId = "user.near".parse().unwrap();
         let mut context = get_context(user.clone());
-        context.attached_deposit(NearToken::from_yoctonear(2_000_000));
+        // Set deposit to cover both price (1 NEAR) and storage (0.00125 NEAR)
+        context.attached_deposit(NearToken::from_yoctonear(2_250_000_000_000_000_000_000));
         context.current_account_id("contract.near".parse().unwrap());
         testing_env!(context.build());
 
-        let mut contract = Contract::new(owner, U128(1_000_000));
+        let mut contract = Contract::new(owner, U128(1_000_000_000_000_000_000_000));
         contract.user_create_sub_account("test".to_string(), get_test_public_key());
 
         assert_eq!(contract.get_sub_count(), 1);
         assert_eq!(contract.get_sub_addresses(0, 10), vec!["test.contract.near"]);
-        assert_eq!(contract.user_get_deposit_balance(user).0, 1_000_000);
+        // Check remaining balance after subtracting price and storage costs
+        assert_eq!(contract.user_get_deposit_balance(user).0, 1250000000000000000000);
     }
 
     #[test]
