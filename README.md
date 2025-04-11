@@ -1,6 +1,6 @@
 # sleet_subaccount_store_rust
 
-📝 turns any near account into a subaccount store
+📝 turns any near account into a sub account store
 
 ---
 
