@@ -93,7 +93,7 @@ impl Contract {
         let deposit = near_sdk::env::attached_deposit();
         let account_id = near_sdk::env::predecessor_account_id();
         let current_balance = self.deposits.get(&account_id).unwrap_or(NearToken::from_yoctonear(0));
-        let new_balance = current_balance + deposit;
+        let new_balance = NearToken::from_yoctonear(current_balance.as_yoctonear() + deposit.as_yoctonear());
         assert!(new_balance >= self.price, "Insufficient deposit for subaccount creation");
 
         // Create the subaccount
