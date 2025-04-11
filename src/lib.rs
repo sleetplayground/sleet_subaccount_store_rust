@@ -20,8 +20,9 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, UnorderedSet};
 use near_sdk::json_types::U128;
-use near_sdk::{log, near_bindgen, AccountId, NearToken, Promise};
-use near_sdk::PanicOnDefault;
+use near_sdk::{log, near_bindgen, AccountId, NearToken, Promise, PublicKey};
+use near_sdk::{env, PanicOnDefault};
+use near_sdk::json_types::Base58PublicKey;
 
 
 
@@ -100,27 +101,34 @@ impl Contract {
 
     // User deposit and balance management
     #[payable]
-    pub fn user_create_sub_account(&mut self, name: String) -> Promise {
-        let deposit = near_sdk::env::attached_deposit();
-        let account_id = near_sdk::env::predecessor_account_id();
+    pub fn user_create_sub_account(&mut self, name: String, new_public_key: Base58PublicKey) -> Promise {
+        let deposit = env::attached_deposit();
+        let account_id = env::predecessor_account_id();
         let current_balance = self.deposits.get(&account_id).unwrap_or(NearToken::from_yoctonear(0));
         let new_balance = NearToken::from_yoctonear(current_balance.as_yoctonear() + deposit.as_yoctonear());
         assert!(new_balance >= self.price, "Insufficient deposit for subaccount creation");
 
         // Create the subaccount
-        let subaccount_id = format!("{}.{}", name, near_sdk::env::current_account_id());
+        let subaccount_id = format!("{}.{}", name, env::current_account_id());
+        let subaccount = AccountId::new_unchecked(subaccount_id.clone());
         assert!(!self.subaccounts.contains(&subaccount_id), "Subaccount already exists");
         
         // Update state
         self.subaccounts.insert(&subaccount_id);
         self.deposits.insert(&account_id, &(NearToken::from_yoctonear(new_balance.as_yoctonear() - self.price.as_yoctonear())));
 
-        // Return any excess deposit
-        if deposit > self.price {
-            Promise::new(account_id.clone()).transfer(NearToken::from_yoctonear(deposit.as_yoctonear() - self.price.as_yoctonear()))
-        } else {
-            Promise::new(account_id).transfer(NearToken::from_yoctonear(0))
-        }
+        // Calculate the required amount for account creation (0.00125 NEAR for storage)
+        let required_balance = NearToken::from_near(0.00125);
+
+        // Create the new account and add full access key
+        Promise::new(subaccount)
+            .create_account()
+            .add_full_access_key(new_public_key.into())
+            .transfer(required_balance)
+            .then(
+                Promise::new(account_id)
+                    .transfer(NearToken::from_yoctonear(deposit.as_yoctonear() - self.price.as_yoctonear() - required_balance.as_yoctonear()))
+            )
     }
 
     pub fn user_get_deposit_balance(&self, account_id: AccountId) -> U128 {

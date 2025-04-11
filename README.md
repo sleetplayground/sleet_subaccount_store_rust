@@ -82,8 +82,9 @@ near call <contract>.testnet set_price '{"new_price": "2000000000000000000000000
 
 #### Subaccount Management
 ```bash
-# Create a subaccount (requires attached deposit >= price)
-near call <contract>.testnet user_create_sub_account '{"name": "mysubaccount"}' --deposit 1.1 --accountId <your-account>.testnet
+# Create a subaccount (requires attached deposit >= price + 0.00125 NEAR for storage)
+# Note: Replace <public-key> with your actual public key in Base58 format
+near call <contract>.testnet user_create_sub_account '{"name": "mysubaccount", "new_public_key": "<public-key>"}' --deposit 1.1 --accountId <your-account>.testnet
 
 # Get total subaccount count
 near view <contract>.testnet get_sub_count
