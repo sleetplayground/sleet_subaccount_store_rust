@@ -37,11 +37,11 @@ near deploy <your-account>.near build_near/sleet_subaccount_store_rust.wasm
 
 ---
 
-
 ### Methods
 
 - get_greeting
 - set_greeting
+To initialize the contract, you need to specify the owner account and initial price for subaccounts:
 
 - set_price, for setting the required near deposit for sub account
 - get_price, for getting the required price
@@ -52,8 +52,58 @@ near deploy <your-account>.near build_near/sleet_subaccount_store_rust.wasm
 - user_withdraw_balance, so a user can withdraw their deposit balance
 - contract should keep track of users deposit balances whenever anyone trasfers near to the contract
 
+---
 
 
+### Contract Initialization
+
+To initialize the contract, you need to specify the owner account and initial price for subaccounts:
+
+```bash
+# Initialize on testnet (price in yoctoNEAR, 1 N = 1e24 yN)
+near call <your-account>.testnet new '{"owner_id": "<your-account>.testnet", "initial_price": "1000000000000000000000000"}' --accountId <your-account>.testnet
+
+# Initialize on mainnet
+near call <your-account>.near new '{"owner_id": "<your-account>.near", "initial_price": "1000000000000000000000000"}' --accountId <your-account>.near
+```
+
+### Contract Methods
+
+#### Price Management
+```bash
+# Get current price
+near view <contract>.testnet get_price
+
+# Set new price (owner only)
+near call <contract>.testnet set_price '{"new_price": "2000000000000000000000000"}' --accountId <owner>.testnet
+```
+
+#### Subaccount Management
+```bash
+# Create a subaccount (requires attached deposit >= price)
+near call <contract>.testnet user_create_sub_account '{"name": "mysubaccount"}' --deposit 1.1 --accountId <your-account>.testnet
+
+# Get total subaccount count
+near view <contract>.testnet get_sub_count
+
+# List subaccounts (paginated)
+near view <contract>.testnet get_sub_addresses '{"start_index": 0, "limit": 10}'
+```
+
+#### Balance Management
+```bash
+# Check your deposit balance
+near view <contract>.testnet user_get_deposit_balance '{"account_id": "<your-account>.testnet"}'
+
+# Withdraw your balance
+near call <contract>.testnet user_withdraw_balance '{}' --accountId <your-account>.testnet
+```
+
+### Notes
+- All prices and deposits are in yoctoNEAR (1 N = 1e24 yN)
+- Subaccount creation requires a deposit greater than or equal to the current price
+- Excess deposits are automatically refunded
+- The contract tracks user deposit balances for future subaccount creation
 
 ---
 
