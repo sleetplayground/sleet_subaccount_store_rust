@@ -1,5 +1,6 @@
 use serde_json::json;
 use near_sdk::json_types::U128;
+use near_sdk::NearToken;
 
 #[tokio::test]
 async fn test_contract_is_operational() -> Result<(), Box<dyn std::error::Error>> {
@@ -20,7 +21,7 @@ async fn test_basics_on(contract_wasm: &[u8]) -> Result<(), Box<dyn std::error::
         .call("new")
         .args_json(json!({
             "owner_id": contract.id(),
-            "initial_price": U128(1_000_000)
+            "initial_price": U128(NearToken::from_near(1).as_yoctonear())
         }))
         .transact()
         .await?;

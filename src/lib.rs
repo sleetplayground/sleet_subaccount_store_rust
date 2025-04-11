@@ -10,15 +10,18 @@
 
 /// 👋
 // Find all our documentation at https://docs.near.org
+use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, UnorderedSet};
 use near_sdk::json_types::U128;
 use near_sdk::{log, near_bindgen, AccountId, NearToken, Promise};
+use near_sdk::PanicOnDefault;
 
 
 
 /// 👋
 // Define the contract structure
 #[near_bindgen]
+#[derive(BorshDeserialize, BorshSerialize, PanicOnDefault)]
 pub struct Contract {
     greeting: String,
     price: NearToken,
@@ -28,6 +31,7 @@ pub struct Contract {
 }
 
 // Define the default, which automatically initializes the contract
+
 #[near_bindgen]
 impl Contract {
     #[init]
