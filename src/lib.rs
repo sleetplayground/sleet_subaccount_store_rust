@@ -2,9 +2,16 @@
 /// ❄️👋
 /// Hello
 /// sleet_subaccount_store_rust
-/// methods
-/// get_greeting
-/// set_greeting
+/// Contract Methods:
+/// - get_greeting() -> String
+/// - set_greeting(greeting: String)
+/// - set_price(new_price: U128)
+/// - get_price() -> U128
+/// - get_sub_count() -> u64
+/// - get_sub_addresses(start_index: u64, limit: u64) -> Vec<String>
+/// - user_create_sub_account(name: String) -> Promise
+/// - user_get_deposit_balance(account_id: AccountId) -> U128
+/// - user_withdraw_balance() -> Promise
 
 
 
