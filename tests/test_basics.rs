@@ -1,4 +1,5 @@
 use serde_json::json;
+use near_sdk::json_types::U128;
 
 #[tokio::test]
 async fn test_contract_is_operational() -> Result<(), Box<dyn std::error::Error>> {
@@ -13,6 +14,17 @@ async fn test_basics_on(contract_wasm: &[u8]) -> Result<(), Box<dyn std::error::
     let contract = sandbox.dev_deploy(contract_wasm).await?;
 
     let user_account = sandbox.dev_create_account().await?;
+
+    // Initialize the contract with owner and price
+    let outcome = contract
+        .call("new")
+        .args_json(json!({
+            "owner_id": contract.id(),
+            "initial_price": U128(1_000_000)
+        }))
+        .transact()
+        .await?;
+    assert!(outcome.is_success());
 
     let outcome = user_account
         .call(contract.id(), "set_greeting")
