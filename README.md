@@ -102,11 +102,22 @@ near view <contract>.testnet user_get_deposit_balance '{"account_id": "<your-acc
 near call <contract>.testnet user_withdraw_balance '{}' --accountId <your-account>.testnet
 ```
 
+
+#### Admin Management
+```bash
+# Add a subaccount (owner only)
+near call <contract>.testnet admin_add_account '{"subaccount_id": "mysubaccount.<contract>.testnet"}' --accountId <owner>.testnet
+
+# Remove a subaccount (owner only)
+near call <contract>.testnet admin_remove_account '{"subaccount_id": "mysubaccount.<contract>.testnet"}' --accountId <owner>.testnet
+```
+
 ### Notes
 - All prices and deposits are in yoctoNEAR (1 N = 1e24 yN)
 - Subaccount creation requires a deposit greater than or equal to the current price
 - Excess deposits are automatically refunded
 - The contract tracks user deposit balances for future subaccount creation
+
 
 ---
 
