@@ -1,6 +1,7 @@
 use near_sdk::test_utils::VMContextBuilder;
-use near_sdk::{testing_env, AccountId, json_types::U128, NearToken};
+use near_sdk::{testing_env, AccountId, json_types::U128, NearToken, PublicKey};
 use crate::Contract;
+use std::str::FromStr;
 
 #[cfg(test)]
 mod tests {
@@ -10,6 +11,11 @@ mod tests {
         let mut builder = VMContextBuilder::new();
         builder.predecessor_account_id(predecessor);
         builder
+    }
+
+    fn get_test_public_key() -> PublicKey {
+        // Use a valid ED25519 public key for testing
+        PublicKey::from_str("ed25519:6E8sCci9badyRkXb3JoRpBj5p8C6Tw41ELDZoiihKEtp").unwrap()
     }
 
     #[test]
@@ -64,7 +70,7 @@ mod tests {
         testing_env!(context.build());
 
         let mut contract = Contract::new(owner, U128(1_000_000));
-        contract.user_create_sub_account("test".to_string());
+        contract.user_create_sub_account("test".to_string(), get_test_public_key());
 
         assert_eq!(contract.get_sub_count(), 1);
         assert_eq!(contract.get_sub_addresses(0, 10), vec!["test.contract.near"]);
@@ -81,6 +87,6 @@ mod tests {
         testing_env!(context.build());
 
         let mut contract = Contract::new(owner, U128(1_000_000));
-        contract.user_create_sub_account("test".to_string());
+        contract.user_create_sub_account("test".to_string(), get_test_public_key());
     }
 }
