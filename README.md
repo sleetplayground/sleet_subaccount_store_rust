@@ -51,6 +51,8 @@ To initialize the contract, you need to specify the owner account and initial pr
 - user_create_sub_account, for creating a subaccount, anyone can call this if they have deposied the min required
 - user_withdraw_balance, so a user can withdraw their deposit balance
 - contract should keep track of users deposit balances whenever anyone trasfers near to the contract
+- admin_add_account, for adding subaccounts to the list, users should not be able to create subaccounts for accounts that already exist and are on the list
+- admin_remove_account, for removing subaccounts from the list.
 
 ---
 
