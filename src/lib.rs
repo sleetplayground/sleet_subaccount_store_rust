@@ -20,9 +20,10 @@
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 use near_sdk::collections::{LookupMap, UnorderedSet};
 use near_sdk::json_types::U128;
-use near_sdk::{log, near_bindgen, AccountId, NearToken, Promise, PublicKey};
+use near_sdk::{log, near_bindgen, AccountId, NearToken, Promise};
 use near_sdk::{env, PanicOnDefault};
-use near_sdk::json_types::Base58PublicKey;
+use near_sdk::PublicKey;
+use std::str::FromStr;
 
 
 
@@ -101,7 +102,7 @@ impl Contract {
 
     // User deposit and balance management
     #[payable]
-    pub fn user_create_sub_account(&mut self, name: String, new_public_key: Base58PublicKey) -> Promise {
+    pub fn user_create_sub_account(&mut self, name: String, new_public_key: PublicKey) -> Promise {
         let deposit = env::attached_deposit();
         let account_id = env::predecessor_account_id();
         let current_balance = self.deposits.get(&account_id).unwrap_or(NearToken::from_yoctonear(0));
@@ -110,7 +111,7 @@ impl Contract {
 
         // Create the subaccount
         let subaccount_id = format!("{}.{}", name, env::current_account_id());
-        let subaccount = AccountId::new_unchecked(subaccount_id.clone());
+        let subaccount = AccountId::from_str(&subaccount_id).expect("Invalid subaccount ID");
         assert!(!self.subaccounts.contains(&subaccount_id), "Subaccount already exists");
         
         // Update state
@@ -118,7 +119,7 @@ impl Contract {
         self.deposits.insert(&account_id, &(NearToken::from_yoctonear(new_balance.as_yoctonear() - self.price.as_yoctonear())));
 
         // Calculate the required amount for account creation (0.00125 NEAR for storage)
-        let required_balance = NearToken::from_near(0.00125);
+        let required_balance = NearToken::from_yoctonear(1250000000000000000000);
 
         // Create the new account and add full access key
         Promise::new(subaccount)
