@@ -12,6 +12,8 @@
 /// - user_create_sub_account(name: String) -> Promise
 /// - user_get_deposit_balance(account_id: AccountId) -> U128
 /// - user_withdraw_balance() -> Promise
+/// - admin_add_account(subaccount_id: String)
+/// - admin_remove_account(subaccount_id: String)
 
 
 
